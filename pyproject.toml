@@ -1,0 +1,16 @@
+[project]
+name = "interview-transcription-tool"
+version = "0.1.0"
+description = "Local interview transcription with speaker diarization using WhisperX"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = { text = "MIT" }
+
+dependencies = [
+    "whisperx>=3.1.1",
+    "torch>=2.0.0,<2.5",
+    "torchaudio>=2.0.0,<2.5",
+    "pyannote-audio>=3.1.0",
+    "huggingface-hub>=0.19.0",
+    "matplotlib",
+]

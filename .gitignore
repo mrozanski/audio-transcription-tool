@@ -1,0 +1,77 @@
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Hugging Face token files
+hf_token.txt
+token.txt
+
+# Python virtual environment
+venv/
+env/
+.venv/
+.env/
+ENV/
+
+# uv
+uv.lock
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+dist/
+eggs/
+*.egg-info/
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test outputs
+*.log
+test_output/
+
+# Audio files (often large, shouldn't be in repo)
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.ogg
+*.aac
+*.wma
+
+# Transcription outputs (generated files)
+transcripts/
+output/
+*.transcript.txt
+
+# Model cache (very large)
+models/
+*.pt
+*.bin
+*.onnx
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
