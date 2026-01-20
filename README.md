@@ -106,6 +106,7 @@ uv run python transcribe.py --input interview.wav --num-speakers 2 --labels "Hos
 | `--output FILE` | `-o` | Output file (default: stdout) |
 | `--timestamps` | `-t` | Include timestamps in output |
 | `--model SIZE` | `-m` | Whisper model (default: large-v3) |
+| `--language CODE` | `-L` | Language code (e.g., 'en', 'es'). Skips auto-detection |
 | `--hf-token TOKEN` | | Hugging Face token |
 
 ### Examples
@@ -125,6 +126,9 @@ uv run python transcribe.py -s1 track_host.wav -s2 track_guest.wav -l "Host,Gues
 
 # Use a smaller model for faster processing
 uv run python transcribe.py -i recording.wav -m medium
+
+# Skip language detection (faster startup)
+uv run python transcribe.py -i recording.wav -L en
 ```
 
 ## Model Sizes

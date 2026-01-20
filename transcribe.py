@@ -38,11 +38,14 @@ def load_whisper_model(model_size: str, device: str):
     return model
 
 
-def transcribe_audio(model, audio_path: str, device: str) -> dict:
+def transcribe_audio(model, audio_path: str, device: str, language: str = None) -> dict:
     """Transcribe a single audio file and return segments with timestamps."""
     print(f"Transcribing: {audio_path}", file=sys.stderr)
     audio = whisperx.load_audio(audio_path)
-    result = model.transcribe(audio, batch_size=16)
+    transcribe_kwargs = {"batch_size": 16}
+    if language:
+        transcribe_kwargs["language"] = language
+    result = model.transcribe(audio, **transcribe_kwargs)
     return result, audio
 
 
@@ -90,6 +93,7 @@ def transcribe_separate_tracks(
     labels: tuple[str, str],
     device: str,
     show_timestamps: bool,
+    language: str = None,
 ) -> str:
     """
     Transcribe two separate audio tracks and interleave by timestamp.
@@ -98,8 +102,8 @@ def transcribe_separate_tracks(
     is on a separate track with identical timing.
     """
     # Transcribe both tracks
-    result1, audio1 = transcribe_audio(model, track1_path, device)
-    result2, audio2 = transcribe_audio(model, track2_path, device)
+    result1, audio1 = transcribe_audio(model, track1_path, device, language)
+    result2, audio2 = transcribe_audio(model, track2_path, device, language)
 
     # Align both transcriptions
     result1 = align_transcription(result1, audio1, model, device)
@@ -141,6 +145,7 @@ def transcribe_mixed_audio(
     show_timestamps: bool,
     num_speakers: int = None,
     speaker_labels: dict[str, str] = None,
+    language: str = None,
 ) -> str:
     """
     Transcribe a single mixed audio file with automatic speaker diarization.
@@ -149,7 +154,7 @@ def transcribe_mixed_audio(
     captured in a single channel.
     """
     # Transcribe
-    result, audio = transcribe_audio(model, audio_path, device)
+    result, audio = transcribe_audio(model, audio_path, device, language)
 
     # Align
     result = align_transcription(result, audio, model, device)
@@ -322,6 +327,11 @@ Examples:
         choices=["tiny", "base", "small", "medium", "large", "large-v2", "large-v3"],
         help="Whisper model size (default: large-v3)",
     )
+    model_group.add_argument(
+        "--language", "-L",
+        metavar="CODE",
+        help="Language code (e.g., 'en', 'es', 'fr'). Skips auto-detection if provided.",
+    )
 
     # Authentication
     auth_group = parser.add_argument_group("Authentication")
@@ -386,6 +396,7 @@ Examples:
             labels=labels,
             device=device,
             show_timestamps=args.timestamps,
+            language=args.language,
         )
     else:
         # Create speaker label mapping if provided
@@ -403,6 +414,7 @@ Examples:
             show_timestamps=args.timestamps,
             num_speakers=args.num_speakers,
             speaker_labels=speaker_labels,
+            language=args.language,
         )
 
     # Write output
