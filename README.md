@@ -1,6 +1,6 @@
-# Interview Transcription Tool
+# Audio Transcription Tool
 
-A local transcription workflow for interview audio using WhisperX. Optimized for Apple Silicon Macs (M1/M2/M3/M4), with full offline processing after initial model download.
+A local transcription workflow for recorded human voice audio using WhisperX. Optimized for Apple Silicon Macs (M1/M2/M3/M4), with full offline processing after initial model download.
 
 ## Features
 
@@ -141,7 +141,7 @@ uv run python transcribe.py -i recording.wav -L en
 | medium | 769M | Slower | Better accuracy |
 | large-v3 | 1.5B | Slowest | Best accuracy |
 
-For interviews where accuracy matters, `large-v3` (the default) is recommended.
+For cases where accuracy matters, `large-v3` (the default) is recommended.
 
 ## Output Format
 
