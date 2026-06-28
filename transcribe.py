@@ -30,11 +30,15 @@ def get_device():
     return "cpu"
 
 
-def load_whisper_model(model_size: str, device: str):
+def load_whisper_model(model_size: str, device: str, language: str = None):
     """Load the WhisperX model."""
     compute_type = "float32" if device == "cpu" else "float16"
     print(f"Loading Whisper model '{model_size}' on {device}...", file=sys.stderr)
-    model = whisperx.load_model(model_size, device, compute_type=compute_type)
+    if language:
+        print(f"Using language: {language}", file=sys.stderr)
+    model = whisperx.load_model(
+        model_size, device, compute_type=compute_type, language=language
+    )
     return model
 
 
@@ -258,7 +262,7 @@ def main():
         epilog="""
 Examples:
   # Separate tracks (high-quality DAW exports)
-  python transcribe.py --speaker1 host.wav --speaker2 guest.wav --labels "Maria,John"
+  python transcribe.py --speaker1 host.wav --speaker2 guest.wav --speaker-labels "Maria,John"
 
   # Single mixed file (ambient recording)
   python transcribe.py --input interview.wav
@@ -295,7 +299,7 @@ Examples:
     # Speaker options
     speaker_group = parser.add_argument_group("Speaker options")
     speaker_group.add_argument(
-        "--labels", "-l",
+        "--speaker-labels", "-sl",
         metavar="NAMES",
         help="Comma-separated speaker names, e.g., 'Maria,John'",
     )
@@ -376,8 +380,8 @@ Examples:
 
     # Parse speaker labels
     labels = ("Speaker 1", "Speaker 2")
-    if args.labels:
-        parts = [l.strip() for l in args.labels.split(",")]
+    if args.speaker_labels:
+        parts = [l.strip() for l in args.speaker_labels.split(",")]
         if len(parts) >= 2:
             labels = (parts[0], parts[1])
         elif len(parts) == 1:
@@ -385,7 +389,7 @@ Examples:
 
     # Setup device and model
     device = get_device()
-    model = load_whisper_model(args.model, device)
+    model = load_whisper_model(args.model, device, language=args.language)
 
     # Run transcription
     if separate_mode:
@@ -401,9 +405,9 @@ Examples:
     else:
         # Create speaker label mapping if provided
         speaker_labels = None
-        if args.labels:
+        if args.speaker_labels:
             # Map SPEAKER_00, SPEAKER_01, etc. to provided names
-            parts = [l.strip() for l in args.labels.split(",")]
+            parts = [l.strip() for l in args.speaker_labels.split(",")]
             speaker_labels = {f"SPEAKER_{i:02d}": name for i, name in enumerate(parts)}
 
         output = transcribe_mixed_audio(

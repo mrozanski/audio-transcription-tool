@@ -73,7 +73,7 @@ The speaker diarization models require accepting a license agreement on Hugging 
 When you have each speaker on their own audio file with identical timing:
 
 ```bash
-uv run python transcribe.py --speaker1 host.wav --speaker2 guest.wav --labels "Maria,John"
+uv run python transcribe.py --speaker1 host.wav --speaker2 guest.wav --speaker-labels "Maria,John"
 ```
 
 This mode transcribes each track independently and interleaves the results by timestamp, giving you perfect speaker attribution.
@@ -91,7 +91,7 @@ This mode uses automatic speaker diarization to identify who spoke when.
 **Tip**: Specifying the number of speakers improves accuracy:
 
 ```bash
-uv run python transcribe.py --input interview.wav --num-speakers 2 --labels "Host,Guest"
+uv run python transcribe.py --input interview.wav --num-speakers 2 --speaker-labels "Host,Guest"
 ```
 
 ### Options
@@ -101,7 +101,7 @@ uv run python transcribe.py --input interview.wav --num-speakers 2 --labels "Hos
 | `--input FILE` | `-i` | Single audio file (mixed-audio mode) |
 | `--speaker1 FILE` | `-s1` | First speaker's track (separate-tracks mode) |
 | `--speaker2 FILE` | `-s2` | Second speaker's track (separate-tracks mode) |
-| `--labels NAMES` | `-l` | Comma-separated speaker names |
+| `--speaker-labels NAMES` | `-sl` | Comma-separated speaker names |
 | `--num-speakers N` | `-n` | Number of speakers (helps diarization) |
 | `--output FILE` | `-o` | Output file (default: stdout) |
 | `--timestamps` | `-t` | Include timestamps in output |
@@ -116,13 +116,13 @@ uv run python transcribe.py --input interview.wav --num-speakers 2 --labels "Hos
 uv run python transcribe.py -i meeting.wav
 
 # With speaker names and timestamps
-uv run python transcribe.py -i interview.mp3 -l "Alice,Bob" -t
+uv run python transcribe.py -i interview.mp3 -sl "Alice,Bob" -t
 
 # Save to file
 uv run python transcribe.py -i podcast.wav -o transcript.txt
 
 # Separate tracks from DAW
-uv run python transcribe.py -s1 track_host.wav -s2 track_guest.wav -l "Host,Guest"
+uv run python transcribe.py -s1 track_host.wav -s2 track_guest.wav -sl "Host,Guest"
 
 # Use a smaller model for faster processing
 uv run python transcribe.py -i recording.wav -m medium
